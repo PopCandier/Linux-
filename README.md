@@ -4,7 +4,8 @@ jdk+tomcat+nginx+mysql
 ### 2019/7/24 Linux环境部署
 
 `jdk+tomcat+nginx+mysql安装`
-
+百度网盘：链接：https://pan.baidu.com/s/1DXaGFBZDYK25_WRgXj2pIQ 
+提取码：v5tu 
 
 
 ### Linux 的磁盘挂载
