@@ -6,19 +6,19 @@ nexus的安装
 
 下载完成后，解压
 
-![1566539308505](C:\Users\范凌轩\AppData\Roaming\Typora\typora-user-images\1566539308505.png)
+![1566539308505](./img/1566539308505.png)
 
 我们首先更改一下端口号
 
-![1566539651146](C:\Users\范凌轩\AppData\Roaming\Typora\typora-user-images\1566539651146.png)
+![1566539651146](./img/1566539651146.png)
 
 然后修改一下内存大小的设置。如果你内存很富裕，可以不用设置这一步。
 
-![1566539457770](C:\Users\范凌轩\AppData\Roaming\Typora\typora-user-images\1566539457770.png)
+![1566539457770](./img/1566539457770.png)
 
 最后cd到bin的目录下，运行
 
-![1566539533482](C:\Users\范凌轩\AppData\Roaming\Typora\typora-user-images\1566539533482.png)
+![1566539533482](./img/1566539533482.png)
 
 ```
 nexus /run
@@ -36,7 +36,7 @@ http://192.168.10.40:8099
 
 默认的密码位于
 
-![1566540464692](C:\Users\范凌轩\AppData\Roaming\Typora\typora-user-images\1566540464692.png)
+![1566540464692](./img/1566540464692.png)
 
 里面有一串加密字符串，粘贴出便可以登陆成功，然后修改密码为
 
@@ -51,27 +51,27 @@ nexus中含有三种类型的仓库
 * hosted 用于放置开发所有的jar，也是我们用的比较多的那种
 * group 是仓库的集合，可以分组管理。
 
-![1566540712114](C:\Users\范凌轩\AppData\Roaming\Typora\typora-user-images\1566540712114.png)
+![1566540712114](./img/1566540712114.png)
 
 #### 创建一个仓库
 
-![1566540749767](C:\Users\范凌轩\AppData\Roaming\Typora\typora-user-images\1566540749767.png)
+![1566540749767](./img/1566540749767.png)
 
 添加一个hosted的仓库
 
-![1566540785111](C:\Users\范凌轩\AppData\Roaming\Typora\typora-user-images\1566540785111.png)
+![1566540785111](./img/1566540785111.png)
 
-![1566540944822](C:\Users\范凌轩\AppData\Roaming\Typora\typora-user-images\1566540944822.png)
+![1566540944822](./img/1566540944822.png)
 
 其实本身的类型并没有什么区别，只不过可能拉取的顺序有所区别。
 
 然后创建完成。
 
-![1566541013946](C:\Users\范凌轩\AppData\Roaming\Typora\typora-user-images\1566541013946.png)
+![1566541013946](./img/1566541013946.png)
 
 然后我们再创建一个分区，管理好他们。
 
-![1566541176280](C:\Users\范凌轩\AppData\Roaming\Typora\typora-user-images\1566541176280.png)
+![1566541176280](./img/1566541176280.png)
 
 然后上传jar。
 
