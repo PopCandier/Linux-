@@ -201,14 +201,148 @@ jdk+tomcat+nginx+mysql
   * 首先将sql文件放到linux服务器上，在登陆客户端后
   * 使用命令 source /你的sql文件.sql 完成导入。
 
-<https://www.cnblogs.com/duanrantao/p/8988116.html>
+具体安装步骤，先去目标网盘下载相关文件
 
-具体安装步骤。
+我们下载完毕候，需要创建一个文件
 
+我们规定，`soft`用来安放文件，`/usr/local/mysql`来安放mysql的主要要文件，`/data/mysql`用来安放相关数据文件。
 
+```
+mkdir soft
+```
 
+cd 到 soft 目录下，执行解压
 
+```
+tar -zxvf mysql-5.5.62-linux-glibc2.12-x86_64.tar.gz
+```
 
+解压完毕后，我们将解压好的文件移动到我们约定好的`/usr/local/mysql`下
 
+```
+mv mysql-5.5.62-linux-glibc2.12-x86_64 /usr/local/mysql
+```
 
+![1574084953238](./img/1574084953238.png)
 
+接下来创建mysql用户组合用户并修改权限。
+
+让mysql运行的时候使用一个独立的账号，如果mysql被黑了那么开始拿到的权限就是那个创建的账号而不是默认的root
+大概意思是，我们分配给mysql服务一个单独的账号，我们在编译安装的时候创建一个mysql组和一个mysql用户，并把datadir和安装目录属主改为mysql，在MySQL启动的时候，单进程mysqld，该进程的属主就是mysql，这样就保证了mysql服务的独立性，即便mysql服务被黑掉，得到了mysql用户权限，也不会影响整个系统的安全
+
+```
+groupadd mysql
+useradd -r -g mysql mysql
+```
+
+我们创建分组并赋予他们权限
+
+```
+mkdir -p /data/mysql
+chown mysql:mysql -R /data/mysql
+```
+
+接下来，我们就要配置一下mysql的配置文件，`my.cnf`，将下面内容写入到配置文件中
+
+```properties
+[mysqld]
+port=3306
+user=mysql
+basedir=/usr/local/mysql
+datadir=/data/mysql
+socket=/tmp/mysql.sock
+tmpdir=/tmp
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+# Settings user and group are ignored when systemd is used.
+# If you need to run mysqld under a different user or group,
+# customize your systemd unit file for mariadb according to the
+# instructions in http://fedoraproject.org/wiki/Systemd
+
+[mysqld_safe]
+log-error=/data/mysql/mysql.err
+pid-file=/data/mysql/mysql.pid
+
+# character conif
+
+character_set_server=utf8mb4
+
+```
+
+然后保存退出
+
+接下来就是初始化数据库了，我们回到`/usr/local/mysql`目录下。找到`scripts`文件夹，并到该目录下
+
+```
+./mysql_install_db --verbose --user=mysql --defaults-file=/etc/my.cnf --datadir=/data/mysql --basedir=/usr/local/mysql
+```
+
+![1574085838354](./img/1574085838354.png)
+
+成功后，为了可以方便启动mysql，我们将mysql的服务放到init.d目录下
+
+```
+cp /usr/local/mysql/support-files/mysql.server /etc/init.d/mysql
+```
+
+启动
+
+![1574085992547](./img1574085992547.png)
+
+![1574086076616](./img1574086076616.png)
+
+设置用户名密码，默认root是没有密码的，所以我们可以直接进入，cd到/usr/local/mysql/bin  目录下，可以输入下面执行，并且不输入密码，直接回车就可以进入mysql
+
+![1574086171433](./img1574086171433.png)
+
+开始设置用户名密码。首先我们需要像这样进入mysql，然后输入下面命名
+
+```
+SET PASSWORD = PASSWORD('123456');
+FLUSH PRIVILEGES; 
+```
+
+![1574086309470](./img1574086309470.png)
+
+我们先把密码，设置成123456，然后刷新一下，`exit`后。就发现用户名密码已经更改
+
+> 关于navicat 无法连接到linux的mysql数据的问题
+
+首先，确保你的linux防火墙已经关闭
+
+```
+systemctl stop firewalld
+```
+
+然后在linux上登陆你的mysql数据库，输入下面的命令
+
+```
+mysql> grant all privileges on *.* to root@"%" identified by "123456"; 
+```
+
+![1574086613571](./img/1574086613571.png)
+
+由于安装的mysql数据库没有对外开放的，所以我们在此要给与权限去开放；密码自己设置能够记住的。这表示是给本地ip赋予了所有的权限，包括远程访问权限，%百分号表示允许任ip访问数据库。
+
+然后再输入：
+
+```
+flush privileges;
+```
+
+这相当于是重新加载一下mysql权限，这一步必须有。最后就是退出数据库
+
+还有一个问题就是绑定了本地ip的问题，在之前的my.cnf中，如果存在类似
+
+```properties
+bind 127.0.0.1
+```
+
+的配置，请**注释**掉他，或者改成
+
+```properties
+# bind 127.0.0.1
+bind 0.0.0.0
+```
+
+这样就可以连接成功了。
