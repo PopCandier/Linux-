@@ -346,3 +346,86 @@ bind 0.0.0.0
 ```
 
 这样就可以连接成功了。
+
+
+
+#### Window 版本下安装linux
+
+```
+链接：https://pan.baidu.com/s/12f206tbJzaZmXua55ClFhA 
+提取码：tqke 
+```
+
+官网太慢了，这里有百度链接
+
+默认解压出来的时候，长这样。
+
+![1574169156244](./img/1574169156244.png)
+
+需要创建一个`data`，另一个是`my.ini`文件。
+
+`my.ini`的内容是这样的
+
+```ini
+[mysqld]
+##skip-grant-tables=1
+port = 3306
+basedir=F:\mysql\mysql-5.7.20-winx64
+datadir=F:\mysql\mysql-5.7.20-winx64\data
+# max connection-number
+max_connections=200
+character-set-server=utf8
+default-storage-engine=INNODB
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+[mysql]
+default-character-set=utf8
+```
+
+注意新建`my.ini`的编码格式为 `ANSI`
+
+然后配置环境变量
+
+![1574169426630](./img/1574169426630.png)
+
+写入 `path`
+
+```
+%MYSQL_HOME%\bin
+```
+
+保存后，使用**管理员权限**进入cmd，然后运行
+
+```
+mysqld -install
+```
+
+进行安装。
+
+然后启动mysql服务
+
+```
+net start mysql
+```
+
+> 服务启动后停止，某些服务未有....
+
+* 找到mysql安装路劲的data文件夹，将data进行备份，记住一定要备份！
+  （data文件夹路径可以在mysql安装目录的my.ini文件中搜索datadir找到）将data文件夹删除
+
+* **用管理员身份打开cmd**，进入到mysql的bin目录下，输入命令初始化数据库文件（也就是data）
+
+* 在命令行中输入：`mysqld --initialize-insecure --user=mysql`
+
+* 之后等待一段一段时间就是从新初始化数据库，mysql数据库也就可以从新启动了
+
+* 最后利用备份的打他文件进行数据恢复，把原先库的data里的数据库名文件夹以及ibdata1文件替换就成。
+
+cmd输入services.msc后查看mysql服务是否启动正常。
+
+```
+UPDATE mysql.user SET authentication_string = PASSWORD('123456'), password_expired = 'N' WHERE User = 'root' AND Host = 'localhost';
+
+flush privileges;
+```
+
+安装完毕
